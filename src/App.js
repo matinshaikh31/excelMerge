@@ -1,12 +1,8 @@
-
-
-
-import React, { useState } from 'react';
-import * as XLSX from 'xlsx';
+import React, { useState } from "react";
+import * as XLSX from "xlsx";
 
 const App = () => {
-
-    // const [file1, setFile1] = useState(null);
+  // const [file1, setFile1] = useState(null);
   // const [file2, setFile2] = useState(null);
   // const [data1, setData1] = useState(null);
   // const [data2, setData2] = useState(null);
@@ -52,7 +48,7 @@ const App = () => {
 
   const readExcel = async (file) => {
     const data = await file.arrayBuffer();
-    const workbook = XLSX.read(data, { type: 'array' });
+    const workbook = XLSX.read(data, { type: "array" });
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const jsonData = XLSX.utils.sheet_to_json(worksheet);
     return jsonData;
@@ -60,7 +56,9 @@ const App = () => {
 
   const mergeData = () => {
     if (data1 && data2) {
-      const data2Map = new Map(data2.map((item) => [`${item.ID}_${item.Name}`, item]));
+      const data2Map = new Map(
+        data2.map((item) => [`${item.ID}_${item.Name}`, item])
+      );
 
       const merged = data1
         .map((item1) => {
@@ -84,14 +82,19 @@ const App = () => {
 
       const worksheet = XLSX.utils.json_to_sheet(merged);
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Merged Data');
-      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Merged Data");
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
 
-      const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+      const blob = new Blob([excelBuffer], {
+        type: "application/octet-stream",
+      });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = 'merged_data.xlsx';
+      a.download = "merged_data.xlsx";
       a.click();
       URL.revokeObjectURL(url);
     }
@@ -102,16 +105,34 @@ const App = () => {
   console.log("mergeData", mergedData);
 
   return (
-    <div>
-      <input type="file" onChange={handleFileChange1}></input>
-      <input type="file" onChange={handleFileChange2}></input>
-      <button onClick={mergeData}>Click Me</button>
+    <div className="header">
+      <div className="container">
+      <h1>Upload Excel File</h1>
+      <div className="input_div">
+        <h3>Online Store:- </h3>
+        <input
+          type="file"
+          onChange={handleFileChange1}
+          className="input1"
+        ></input>
+      </div>
+      <div className="input_div">
+      <h3>Offline Store:-</h3>
+        <input
+          type="file"
+          onChange={handleFileChange2}
+          className="input2"
+        ></input>
+      </div>
+      <button onClick={mergeData} className="btn">
+        Get Summary
+      </button>
+      </div>
     </div>
   );
 };
 
-export default App
-
+export default App;
 
 //GPT CODE
 
