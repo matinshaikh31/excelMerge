@@ -54,17 +54,21 @@ const App = () => {
     return jsonData;
   };
 
+
   const mergeData = () => {
     if (data1 && data2) {
-      const data2Map = new Map(
-        data2.map((item) => [`${item.ID}_${item.Name}`, item])
-      );
-
-      const merged = data1
+      // Create a map for data2 to easily lookup by ID and Name
+      const data2Map = new Map(data2.map((item) => [`${item.ID}_${item.Name}`, item]));
+    
+      // Filter data1 to only include items with Stock value of 0
+      const filteredData1 = data1.filter((item) => item.Stock === 0);
+    
+      // Merge the filtered data1 with data2 based on matching IDs and Names
+      const merged = filteredData1
         .map((item1) => {
           const key = `${item1.ID}_${item1.Name}`;
           const item2 = data2Map.get(key);
-
+    
           if (item2) {
             return {
               id: item1.ID,
@@ -76,9 +80,10 @@ const App = () => {
           return null;
         })
         .filter((item) => item !== null);
-
+    
       setMergedData(merged);
-      console.log("mergeData", merged);
+      console.log("mergedData", merged);
+      
 
       const worksheet = XLSX.utils.json_to_sheet(merged);
       const workbook = XLSX.utils.book_new();
@@ -107,26 +112,26 @@ const App = () => {
   return (
     <div className="header">
       <div className="container">
-      <h1>Upload Excel File</h1>
-      <div className="input_div">
-        <h3>Online Store:- </h3>
-        <input
-          type="file"
-          onChange={handleFileChange1}
-          className="input1"
-        ></input>
-      </div>
-      <div className="input_div">
-      <h3>Offline Store:-</h3>
-        <input
-          type="file"
-          onChange={handleFileChange2}
-          className="input2"
-        ></input>
-      </div>
-      <button onClick={mergeData} className="btn">
-        Get Summary
-      </button>
+        <h1>Upload Excel File</h1>
+        <div className="input_div">
+          <h3>Online Store:- </h3>
+          <input
+            type="file"
+            onChange={handleFileChange1}
+            className="input1"
+          ></input>
+        </div>
+        <div className="input_div">
+          <h3>Offline Store:-</h3>
+          <input
+            type="file"
+            onChange={handleFileChange2}
+            className="input2"
+          ></input>
+        </div>
+        <button onClick={mergeData} className="btn">
+          Get Summary
+        </button>
       </div>
     </div>
   );
