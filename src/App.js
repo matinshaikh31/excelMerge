@@ -114,7 +114,7 @@ const App = () => {
       <div className="container">
         <h1>Upload Excel File</h1>
         <div className="input_div">
-          <h3>Online Store:- </h3>
+          <h3>Offline Store:- </h3>
           <input
             type="file"
             onChange={handleFileChange1}
@@ -122,7 +122,7 @@ const App = () => {
           ></input>
         </div>
         <div className="input_div">
-          <h3>Offline Store:-</h3>
+          <h3>Online Store:-</h3>
           <input
             type="file"
             onChange={handleFileChange2}
