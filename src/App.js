@@ -41,29 +41,28 @@ const App = () => {
       const filteredData1 = data1.filter((item) => item.Qty === 0);
 
       // Merge data based on barcode and Variant SKU
-      const merged = filteredData1
-        .map((item1) => {
-          const pCode = item1["Barcode"];
-            console.log(pCode);
-            const matchedRow = data2.filter((item) =>{
-              
-              console.log(item)
-              console.log(item['Variant SKU'], pCode)
-              return item['Variant SKU'] === pCode;});
-            console.log("////////////",matchedRow);
-
-          if (matchedRow.length>0) {
-            return {
-              Barcode: item1.Barcode,
-              productName: item1["Product Name"],
-              qty: item1.Qty,
-              handle: matchedRow[0]['Handle'],
-              variantInventoryQty: matchedRow[0]["Variant Inventory Qty"],
-            };
-          }
-          return null;
+      const merged = filteredData1.map((item1) => {
+        const pCode = item1["Barcode"];
+        console.log(pCode);
+        const matchedRow = data2.filter((item) => {
+          console.log(item);
+          console.log(item["Variant SKU"], pCode);
+          return item["Variant SKU"] === pCode;
         });
-        // .filter((item) => item !== null);
+        console.log("////////////", matchedRow);
+
+        if (matchedRow.length > 0) {
+          return {
+            Barcode: item1.Barcode,
+            productName: item1["Product Name"],
+            qty: item1.Qty,
+            handle: matchedRow[0]["Handle"],
+            variantInventoryQty: matchedRow[0]["Variant Inventory Qty"],
+          };
+        }
+        return null;
+      });
+      // .filter((item) => item !== null);
 
       setMergedData(merged);
       console.log("mergedData", merged);
@@ -96,9 +95,11 @@ const App = () => {
   return (
     <div className="header">
       <div className="container">
-        <h1>Upload Excel Files</h1>
+        <h1>
+          Sequinze Inventory Comparison Developed by Diwizon Dynamics Pvt. Ltd
+        </h1>
         <div className="input_div">
-          <h3>File 1 (with barcode and Qty):</h3>
+          <h3>Offline Excel</h3>
           <input
             type="file"
             onChange={handleFileChange1}
@@ -106,7 +107,7 @@ const App = () => {
           ></input>
         </div>
         <div className="input_div">
-          <h3>File 2 (with Variant SKU and Handle):</h3>
+          <h3>Online Excel</h3>
           <input
             type="file"
             onChange={handleFileChange2}
@@ -122,10 +123,6 @@ const App = () => {
 };
 
 export default App;
-
-
-
-
 
 //GPT CODE
 
@@ -218,10 +215,3 @@ export default App;
 // };
 
 // export default ExcelMerger;
-// i have 2 excel file one has headers  and it has barcode ,
-// Product Name,Qty etc and another excel file have header from 1 row Handel,
-// Variant SKU,Variant Inventory Qty
-
-// the barcode and Variant SKU has same value  so base on this
-// i only want the values in which the qty was 0 from file one
-// and having header handler from file one barcode which is same in both and  Variant Inventory Qty but only qty having 0 from data 1 and qty 0
