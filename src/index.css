@@ -48,10 +48,11 @@ input{
   background-color: #374151;
 }
 .btn {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   margin-top: 1rem;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
+  width: 30%;
   color: #ffffff;
   background-color: #3b82f6;
 }
