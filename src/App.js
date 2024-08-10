@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-
+import Footer from "./components/Footer/Footer";
+import diwizonImg from "./asset/Diwizon_Logo_White_BG-removebg-preview.png"
 const App = () => {
   const [file1, setFile1] = useState(null);
   const [file2, setFile2] = useState(null);
@@ -93,10 +94,14 @@ const App = () => {
   console.log("mergedData", mergedData);
 
   return (
+    <>
     <div className="header">
+      <div>
+        <img src={diwizonImg} alt=""/>
+      </div>
       <div className="container">
         <h1>
-          Sequinze Inventory Comparison Developed by Diwizon Dynamics Pvt. Ltd
+          Sequinze Inventory Comparison
         </h1>
         <div className="input_div">
           <h3>Offline Excel</h3>
@@ -119,99 +124,10 @@ const App = () => {
         </button>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 
 export default App;
 
-//GPT CODE
-
-// import React, { useState } from 'react';
-// import * as XLSX from 'xlsx';
-// import { saveAs } from 'file-saver';
-
-// const ExcelMerger = () => {
-//   const [file1, setFile1] = useState(null);
-//   const [file2, setFile2] = useState(null);
-
-//   const handleFile1Change = (e) => {
-//     setFile1(e.target.files[0]);
-//   };
-
-//   const handleFile2Change = (e) => {
-//     setFile2(e.target.files[0]);
-//   };
-
-//   const mergeFiles = async () => {
-//     if (!file1 || !file2) {
-//       alert('Please upload both files.');
-//       return;
-//     }
-
-//     const data1 = await readExcelFile(file1);
-//     const data2 = await readExcelFile(file2);
-
-//     const mergedData = mergeData(data1, data2);
-
-//     const newWorkbook = XLSX.utils.book_new();
-//     const newWorksheet = XLSX.utils.json_to_sheet(mergedData);
-//     XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, 'Merged Data');
-
-//     const newExcelBuffer = XLSX.write(newWorkbook, {
-//       bookType: 'xlsx',
-//       type: 'array',
-//     });
-
-//     saveAs(new Blob([newExcelBuffer], { type: 'application/octet-stream' }), 'merged_data.xlsx');
-//   };
-
-//   const readExcelFile = (file) => {
-//     return new Promise((resolve, reject) => {
-//       const reader = new FileReader();
-//       reader.onload = (e) => {
-//         const data = new Uint8Array(e.target.result);
-//         const workbook = XLSX.read(data, { type: 'array' });
-//         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-//         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-//         resolve(jsonData);
-//       };
-//       reader.onerror = (err) => {
-//         reject(err);
-//       };
-//       reader.readAsArrayBuffer(file);
-//     });
-//   };
-
-//   const mergeData = (data1, data2) => {
-//     const mergedData = [];
-
-//     const data2Map = new Map(data2.map(item => [item.ID + item.Name, item]));
-
-//     data1.forEach(item1 => {
-//       const key = item1.ID + item1.Name;
-//       const item2 = data2Map.get(key);
-
-//       if (item2) {
-//         mergedData.push({
-//           ID: item1.ID,
-//           Name: item1.Name,
-//           Stock1: item1.Stock,
-//           Stock2: item2.Stock
-//         });
-//       }
-//     });
-
-//     return mergedData;
-//   };
-
-//   return (
-//     <div>
-//       <h1>Excel File Merger</h1>
-//       <input type="file" accept=".xlsx, .xls" onChange={handleFile1Change} />
-//       <input type="file" accept=".xlsx, .xls" onChange={handleFile2Change} />
-//       <button onClick={mergeFiles}>Merge Files</button>
-//     </div>
-//   );
-// };
-
-// export default ExcelMerger;
