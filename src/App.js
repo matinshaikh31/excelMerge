@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import Footer from "./components/Footer/Footer";
 import diwizonImg from "./asset/Diwizon_Logo_White_BG-removebg-preview.png"
+
+
 const App = () => {
   const [file1, setFile1] = useState(null);
   const [file2, setFile2] = useState(null);
@@ -19,8 +21,29 @@ const App = () => {
   const handleFileChange2 = async (e) => {
     const file = e.target.files[0];
     setFile2(file);
-    const data = await readExcel(file);
-    setData2(data);
+    const fileName = file.name;
+
+    // Check file extension for appropriate parsing:
+    if (fileName.endsWith('.csv')) {
+      try {
+        const data = await readCSV(file);
+        setData2(data);
+      } catch (error) {
+        console.error("Error reading CSV file:", error);
+        // Handle errors appropriately (e.g., display an error message to the user)
+      }
+    } else if (fileName.endsWith('.xlsx')) {
+      try {
+        const data = await readExcel(file); // Assuming you have a readExcel function
+        setData2(data);
+      } catch (error) {
+        console.error("Error reading Excel file:", error);
+        // Handle errors appropriately
+      }
+    } else {
+      console.warn("Invalid file type. Please upload a CSV or Excel file.");
+      // Optionally, clear any previously set data2
+    }
   };
 
   const readExcel = async (file) => {
@@ -30,6 +53,41 @@ const App = () => {
     const jsonData = XLSX.utils.sheet_to_json(worksheet);
     return jsonData;
   };
+  
+  const readCSV = async (file) => {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const csvData = e.target.result;
+      const jsonData = convertCSVToJson(csvData);
+      setData2(jsonData);
+    };
+  
+    reader.readAsText(file);
+  };
+
+  const convertCSVToJson = (csvData) => {
+    const lines = csvData.split("\n");
+    const headers = lines[0].split(",");
+    const result = [];
+  
+    for (let i = 1; i < lines.length; i++) {
+      const obj = {};
+      const currentLine = lines[i].trim().split(",");
+  
+      for (let j = 0; j < headers.length && j < currentLine.length; j++) {
+        obj[headers[j].trim()] = currentLine[j].trim();
+      }
+  
+      result.push(obj);
+    }
+  
+    return result;
+  };
+  
+  
+  
+
 
   const mergeData = () => {
     if (data1 && data2) {
@@ -45,7 +103,7 @@ const App = () => {
       const merged = filteredData1.map((item1) => {
         const pCode = item1["Barcode"];
         console.log(pCode);
-        const matchedRow = data2.filter((item) => {
+        const matchedRow = data2?.filter((item) => {
           console.log(item);
           console.log(item["Variant SKU"], pCode);
           return item["Variant SKU"] === pCode;
@@ -56,8 +114,8 @@ const App = () => {
           return {
             Barcode: item1.Barcode,
             productName: item1["Product Name"],
-            qty: item1.Qty,
             handle: matchedRow[0]["Handle"],
+            qty: item1.Qty,
             variantInventoryQty: matchedRow[0]["Variant Inventory Qty"],
           };
         }
@@ -130,4 +188,3 @@ const App = () => {
 };
 
 export default App;
-
