@@ -174,7 +174,7 @@ const App = () => {
         URL.revokeObjectURL(url);
         console.log("URL", url);
       } else {
-        console.log("No common data to merge.");
+        alert("No Common Data In This");
       }
     }
   };
